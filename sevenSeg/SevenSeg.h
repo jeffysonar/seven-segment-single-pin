@@ -34,7 +34,7 @@ class SevenSeg
 		for(int i = 0;i < SEG_NUM;i++)
 		{
 			PORTB = sevSeg[i];
-			PORTD = ~ (gpin[i] << gnd[i]);
+			PORTD = (gpin[i] << gnd[i]);
 			_delay_ms(5);
 			
 		}

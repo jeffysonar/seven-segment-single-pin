@@ -29,7 +29,7 @@ int main(void)
 		temp_d ++;
 		if((temp_d % 1000) == 0)
 		{
-			ss.updateBit((temp_bv++)%4,(temp_bit++)%123);
+			ss.clearout(0x0A);
 	 	}
     }
 }
