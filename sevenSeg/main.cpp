@@ -19,17 +19,18 @@ int main(void)
 	uint8_t temp_bit = 0;
 	uint8_t temp_bv = 0;
 	uint8_t temp_d = 0;
-	ss.updateBit(0, 65);
-	ss.updateBit(1, 66);
-	ss.updateBit(2, 67);
-	ss.updateBit(3, 68);
+	ss.cmdCall(0, 65);
+	ss.cmdCall(1, 66);
+	ss.cmdCall(2, 67);
+	ss.cmdCall(3, 68);
+	ss.cmdCall(8, 0x05);
     while (1) 
     {
 	    ss.display();
 		temp_d ++;
 		if((temp_d % 1000) == 0)
 		{
-			ss.clearout(0x0A);
+			ss.cmdCall(8, 0x00);
 	 	}
     }
 }

@@ -27,14 +27,38 @@ const uint8_t gnd[SEG_NUM] = {E_1, E_2, E_3, E_4};
 class SevenSeg
 {
 	uint8_t sevSeg[SEG_NUM] = {0, 0, 0, 0};
-	uint8_t gpin[SEG_NUM] = {0, 0, 0, 0};
+	uint8_t gpin[SEG_NUM] = {1, 1, 1, 1};
 	public:
+	void cmdCall(uint8_t cmd, uint8_t data)
+	{
+		switch(cmd)
+		{
+			case 0:
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+				updateBit(cmd, data);
+				break;
+			case 8:
+				partialSwitch(data);
+				break;
+			case 9:
+				switchnf(data);
+				break;
+			case 0xA:
+				clearout(data);
+		}
+	}
 	void display()
 	{
 		for(int i = 0;i < SEG_NUM;i++)
 		{
 			PORTB = sevSeg[i];
-			PORTD = (gpin[i] << gnd[i]);
+			PORTD = ~(gpin[i] << gnd[i]);
 			_delay_ms(5);
 			
 		}
@@ -42,11 +66,11 @@ class SevenSeg
 	
 	void updateBit(uint8_t place, uint8_t value) // X(0:7) xxxxxxxx
 	{
-		if(place>=SEG_NUM)		//7 segment digit doesn't exist
+		if(place >= SEG_NUM)		//7 segment digit doesn't exist
 		{
 			return;
 		}
-		if(value > 0x0F)	// non - numeric value, it's alphabet
+		if(value > 15)	// non - numeric value, it's alphabet
 		{
 			if((value > 64) && (value < 91))		//A-Z - (65:90) - 65 + 10
 			{
@@ -63,7 +87,7 @@ class SevenSeg
 		}
 		sevSeg[place] = codes[value];
 	}
-	void partialOff(uint8_t pattern)	//X8 xxxxxxxx
+	void partialSwitch(uint8_t pattern)	//X8 xxxxxxxx
 	{
 		if(pattern == 0xFF)
 		{
@@ -81,11 +105,11 @@ class SevenSeg
 			uint8_t r = pattern & (1 << i);
 			if(r == 0)
 			{
-				gpin[i] = 1;
+				gpin[i] = 0;
 			}
 			else
 			{
-				gpin[i] = 0;
+				gpin[i] = 1;
 			}
 		}
 	}
@@ -95,11 +119,11 @@ class SevenSeg
 		uint8_t r;
 		if(d == 0)
 		{
-			r = 1;
+			r = 0;
 		}
 		else
 		{
-			r = 0;
+			r = 1;
 		}
 		for(uint8_t i = 0; i < SEG_NUM; i ++)
 		{
