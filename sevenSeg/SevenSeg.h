@@ -40,7 +40,7 @@ class SevenSeg
 		}
 	}
 	
-	void updateBit(uint8_t place, uint8_t value)
+	void updateBit(uint8_t place, uint8_t value) // X(0:7) xxxxxxxx
 	{
 		if(place>=SEG_NUM)		//7 segment digit doesn't exist
 		{
@@ -63,7 +63,7 @@ class SevenSeg
 		}
 		sevSeg[place] = codes[value];
 	}
-	void partialOff(uint8_t pattern)
+	void partialOff(uint8_t pattern)	//X8 xxxxxxxx
 	{
 		if(pattern == 0xFF)
 		{
@@ -90,7 +90,7 @@ class SevenSeg
 		}
 	}
 
-	void switchnf(uint8_t d)
+	void switchnf(uint8_t d)	//X9 dddddddd
 	{
 		uint8_t r;
 		if(d == 0)
@@ -104,6 +104,26 @@ class SevenSeg
 		for(uint8_t i = 0; i < SEG_NUM; i ++)
 		{
 			gpin[i] = r;
+		}
+	}
+	
+	void clearout(uint8_t pattern)
+	{
+		if(pattern == 0xFF)
+		{
+			for(uint8_t i = 0; i < SEG_NUM; i ++)
+			{
+				gpin[i] = 1;
+			}
+			return;
+		}
+		for(uint8_t i = 0;i < SEG_NUM; i ++)
+		{
+			uint8_t r = pattern & (1 << i);
+			if(r != 0)
+			{
+				sevSeg[i] = S_0;
+			}
 		}
 	}
 	
