@@ -30,8 +30,8 @@ class UART
 			UCSRB = (1 << RXEN) | (1 << RXCIE);					//enable receive, and receive interrupt
 			UCSRC = (1 << 7) | (1<<UCSZ1) | (1 << UCSZ0);		//7 is for URSEL
 																//8 bit data, no parity, 1 stop bit
-			UBRRL = BAUD_NUM;									//U2X is set 
-		//	sei();
+			UBRRL = BAUD_NUM;									//U2X is set to 0
+			sei();												//enable interrupt globally
 		}
 		
 		uint8_t receive()
