@@ -4,7 +4,9 @@
 	#include <avr/io.h>
 #endif
 
-#define F_CPU 20000000UL
+#ifndef F_CPU
+	#define  F_CPU 20000000UL 
+#endif
 
 #include <util/delay.h>
 
@@ -55,7 +57,7 @@ class SevenSeg
 	}
 	void display()
 	{
-		for(int i = 0;i < SEG_NUM;i++)
+		for(int i = 0;i < SEG_NUM;i ++)
 		{
 			PORTB = sevSeg[i];
 			PORTD = ~(gpin[i] << gnd[i]);
@@ -149,6 +151,14 @@ class SevenSeg
 				sevSeg[i] = S_0;
 			}
 		}
+	}
+	
+	void execute(uint8_t recvd[2])
+	{
+		//uint8_t cmd = recvd[0] & 0x0F;	//filter 4 MSB bits of command
+		//uint8_t data = recvd[1];			//data
+		//cmdCall(cmd, data);				//call command
+		cmdCall((recvd[0] & 0x0F), recvd[1]);	//shortcut for above steps
 	}
 	
 };
