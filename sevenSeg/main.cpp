@@ -41,7 +41,7 @@ int main(void)
 	DDRB = 0xFF;
 	DDRD = 0xFF;
     /* Replace with your application code */
-	/*/extra
+	//extra
 	uint8_t temp_bit = 0;
 	uint8_t temp_bv = 0;
 	uint8_t temp_d = 0;
@@ -50,15 +50,16 @@ int main(void)
 	ss.cmdCall(2, 67);
 	ss.cmdCall(3, 68);
 	ss.cmdCall(8, 0x05);
-	//extra end	*/
-    while (1);
-   /* {
+	/*//extra end	*/
+    while (1)
+	{
 	    ss.display();
-		temp_d ++;
+	/*	temp_d ++;
 		if((temp_d % 1000) == 0)
 		{
 			ss.cmdCall(8, 0x00);
 	 	}
-    }*/
+	*/
+    }
 }
 

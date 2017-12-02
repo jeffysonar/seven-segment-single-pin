@@ -55,6 +55,7 @@ class SevenSeg
 				clearout(data);
 		}
 	}
+	
 	void display()
 	{
 		for(int i = 0;i < SEG_NUM;i ++)
@@ -89,6 +90,7 @@ class SevenSeg
 		}
 		sevSeg[place] = codes[value];
 	}
+	
 	void partialSwitch(uint8_t pattern)	//X8 xxxxxxxx
 	{
 		if(pattern == 0xFF)

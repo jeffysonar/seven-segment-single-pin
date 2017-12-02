@@ -19,7 +19,8 @@
 #endif
 
 #ifndef BAUD_NUM
-	#define BAUD_NUM (F_CPU/(16*BAUD_RATE))-1
+//	#define BAUD_NUM (F_CPU/(16*BAUD_RATE))-1
+	#define BAUD_NUM 0x76		// as observed value for above expression in simulator in Atmel Studio
 #endif
 class UART
 {
@@ -30,7 +31,7 @@ class UART
 			UCSRC = (1 << 7) | (1<<UCSZ1) | (1 << UCSZ0);		//7 is for URSEL
 																//8 bit data, no parity, 1 stop bit
 			UBRRL = BAUD_NUM;									//U2X is set 
-			sei();
+		//	sei();
 		}
 		
 		uint8_t receive()
