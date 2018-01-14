@@ -3,29 +3,29 @@ atmega328.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  0000019e  2**0
+  0 .data         00000000  00800100  00800100  000001b4  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         0000014a  00000000  00000000  00000054  2**1
+  1 .text         00000160  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  0000019e  2**0
+  2 .comment      00000030  00000000  00000000  000001b4  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001d0  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001e4  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000030  00000000  00000000  0000020c  2**0
+  4 .debug_aranges 00000038  00000000  00000000  00000220  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   0000027d  00000000  00000000  0000023c  2**0
+  5 .debug_info   00000890  00000000  00000000  00000258  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 00000163  00000000  00000000  000004b9  2**0
+  6 .debug_abbrev 00000752  00000000  00000000  00000ae8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000168  00000000  00000000  0000061c  2**0
+  7 .debug_line   0000030a  00000000  00000000  0000123a  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000044  00000000  00000000  00000784  2**2
+  8 .debug_frame  0000006c  00000000  00000000  00001544  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000210  00000000  00000000  000007c8  2**0
+  9 .debug_str    00000440  00000000  00000000  000015b0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000071  00000000  00000000  000009d8  2**0
+ 10 .debug_loc    00000196  00000000  00000000  000019f0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000050  00000000  00000000  00000a49  2**0
+ 11 .debug_ranges 00000028  00000000  00000000  00001b86  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -65,171 +65,208 @@ Disassembly of section .text:
   6e:	d8 e0       	ldi	r29, 0x08	; 8
   70:	de bf       	out	0x3e, r29	; 62
   72:	cd bf       	out	0x3d, r28	; 61
-  74:	0e 94 48 00 	call	0x90	; 0x90 <main>
-  78:	0c 94 a3 00 	jmp	0x146	; 0x146 <_exit>
+  74:	0e 94 5b 00 	call	0xb6	; 0xb6 <main>
+  78:	0c 94 ae 00 	jmp	0x15c	; 0x15c <_exit>
 
 0000007c <__bad_interrupt>:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
-00000080 <_Z10usart_sendh>:
+00000080 <_Z10usart_initv>:
+	usart_send(value);
+}
+
+void usart_init()
+{
+	UCSR0B = (1 << TXEN0);
+  80:	88 e0       	ldi	r24, 0x08	; 8
+  82:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+	UCSR0C = (1 << UCSZ00) | (1 << UCSZ01);
+  86:	86 e0       	ldi	r24, 0x06	; 6
+  88:	80 93 c2 00 	sts	0x00C2, r24	; 0x8000c2 <__TEXT_REGION_LENGTH__+0x7e00c2>
 	UBRR0L = BAUD_NUM;	
+  8c:	81 e8       	ldi	r24, 0x81	; 129
+  8e:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7e00c4>
+  92:	08 95       	ret
+
+00000094 <_Z10usart_sendh>:
 }
 
 void usart_send(uint8_t ch)
 {
 	while(!(UCSR0A&(1<<UDRE0)));
-  80:	e0 ec       	ldi	r30, 0xC0	; 192
-  82:	f0 e0       	ldi	r31, 0x00	; 0
-  84:	90 81       	ld	r25, Z
-  86:	95 ff       	sbrs	r25, 5
-  88:	fd cf       	rjmp	.-6      	; 0x84 <_Z10usart_sendh+0x4>
+  94:	e0 ec       	ldi	r30, 0xC0	; 192
+  96:	f0 e0       	ldi	r31, 0x00	; 0
+  98:	90 81       	ld	r25, Z
+  9a:	95 ff       	sbrs	r25, 5
+  9c:	fd cf       	rjmp	.-6      	; 0x98 <_Z10usart_sendh+0x4>
 	UDR0=ch;
-  8a:	80 93 c6 00 	sts	0x00C6, r24
-  8e:	08 95       	ret
+  9e:	80 93 c6 00 	sts	0x00C6, r24	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7e00c6>
+  a2:	08 95       	ret
 
-00000090 <main>:
+000000a4 <_Z9updateBithh>:
+		_delay_ms(1000);
+    }
+}
+
+void updateBit(uint8_t pos, uint8_t value)
+{
+  a4:	cf 93       	push	r28
+  a6:	c6 2f       	mov	r28, r22
+	usart_send(pos);
+  a8:	0e 94 4a 00 	call	0x94	; 0x94 <_Z10usart_sendh>
+	usart_send(value);
+  ac:	8c 2f       	mov	r24, r28
+  ae:	0e 94 4a 00 	call	0x94	; 0x94 <_Z10usart_sendh>
+}
+  b2:	cf 91       	pop	r28
+  b4:	08 95       	ret
+
+000000b6 <main>:
+void usart_send(uint8_t ch);
+
+void updateBit(uint8_t pos, uint8_t value);
+
+int main(void)
+{
+  b6:	cf 93       	push	r28
+  b8:	df 93       	push	r29
+  ba:	00 d0       	rcall	.+0      	; 0xbc <main+0x6>
+  bc:	00 d0       	rcall	.+0      	; 0xbe <main+0x8>
+  be:	cd b7       	in	r28, 0x3d	; 61
+  c0:	de b7       	in	r29, 0x3e	; 62
+    /* Replace with your application code */
+	//for(int i=0;i<100;i++)
+	uint8_t v[4] = {'0', '0', '0', '0'};	//0,0,0,0
+  c2:	80 e3       	ldi	r24, 0x30	; 48
+  c4:	89 83       	std	Y+1, r24	; 0x01
+  c6:	8a 83       	std	Y+2, r24	; 0x02
+  c8:	8b 83       	std	Y+3, r24	; 0x03
+  ca:	8c 83       	std	Y+4, r24	; 0x04
+	usart_init();
+  cc:	0e 94 40 00 	call	0x80	; 0x80 <_Z10usart_initv>
+  d0:	32 c0       	rjmp	.+100    	; 0x136 <main+0x80>
+		if(v[0] == '9')			//9
+		{
+			uint8_t i = 0;
+			while(v[i] == '9')	//9
+			{
+				updateBit(i, '0');	//0
+  d2:	60 e3       	ldi	r22, 0x30	; 48
+  d4:	80 e0       	ldi	r24, 0x00	; 0
+  d6:	0e 94 52 00 	call	0xa4	; 0xa4 <_Z9updateBithh>
+				v[i] = '0';
+  da:	80 e3       	ldi	r24, 0x30	; 48
+  dc:	89 83       	std	Y+1, r24	; 0x01
+  de:	7e 01       	movw	r14, r28
+  e0:	22 e0       	ldi	r18, 0x02	; 2
+  e2:	e2 0e       	add	r14, r18
+  e4:	f1 1c       	adc	r15, r1
+  e6:	10 e0       	ldi	r17, 0x00	; 0
+  e8:	0a c0       	rjmp	.+20     	; 0xfe <main+0x48>
+		if(v[0] == '9')			//9
+		{
+			uint8_t i = 0;
+			while(v[i] == '9')	//9
+			{
+				updateBit(i, '0');	//0
+  ea:	60 e3       	ldi	r22, 0x30	; 48
+  ec:	81 2f       	mov	r24, r17
+  ee:	0e 94 52 00 	call	0xa4	; 0xa4 <_Z9updateBithh>
+				v[i] = '0';
+  f2:	80 e3       	ldi	r24, 0x30	; 48
+  f4:	f7 01       	movw	r30, r14
+  f6:	81 93       	st	Z+, r24
+  f8:	7f 01       	movw	r14, r30
+				if(i == 3)
+  fa:	13 30       	cpi	r17, 0x03	; 3
+  fc:	31 f0       	breq	.+12     	; 0x10a <main+0x54>
+				{
+					i = 0;
+					break;
+				}
+				i ++;
+  fe:	1f 5f       	subi	r17, 0xFF	; 255
+		//usart_send(0xE2);
+		//_delay_ms(20);
+		if(v[0] == '9')			//9
+		{
+			uint8_t i = 0;
+			while(v[i] == '9')	//9
+ 100:	f7 01       	movw	r30, r14
+ 102:	80 81       	ld	r24, Z
+ 104:	89 33       	cpi	r24, 0x39	; 57
+ 106:	89 f3       	breq	.-30     	; 0xea <main+0x34>
+ 108:	01 c0       	rjmp	.+2      	; 0x10c <main+0x56>
+			{
+				updateBit(i, '0');	//0
+				v[i] = '0';
+				if(i == 3)
+				{
+					i = 0;
+ 10a:	10 e0       	ldi	r17, 0x00	; 0
+					break;
+				}
+				i ++;
+			}
+			v[i] ++;
+ 10c:	e1 e0       	ldi	r30, 0x01	; 1
+ 10e:	f0 e0       	ldi	r31, 0x00	; 0
+ 110:	ec 0f       	add	r30, r28
+ 112:	fd 1f       	adc	r31, r29
+ 114:	e1 0f       	add	r30, r17
+ 116:	f1 1d       	adc	r31, r1
+ 118:	60 81       	ld	r22, Z
+ 11a:	6f 5f       	subi	r22, 0xFF	; 255
+ 11c:	60 83       	st	Z, r22
+			updateBit(i, v[i]);
+ 11e:	81 2f       	mov	r24, r17
+ 120:	0e 94 52 00 	call	0xa4	; 0xa4 <_Z9updateBithh>
 	#else
 		//round up by default
 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
 	#endif
 
 	__builtin_avr_delay_cycles(__ticks_dc);
-  90:	2f e7       	ldi	r18, 0x7F	; 127
-  92:	86 e9       	ldi	r24, 0x96	; 150
-  94:	98 e9       	ldi	r25, 0x98	; 152
-  96:	21 50       	subi	r18, 0x01	; 1
-  98:	80 40       	sbci	r24, 0x00	; 0
-  9a:	90 40       	sbci	r25, 0x00	; 0
-  9c:	e1 f7       	brne	.-8      	; 0x96 <main+0x6>
-  9e:	00 c0       	rjmp	.+0      	; 0xa0 <main+0x10>
-  a0:	00 00       	nop
-  a2:	2f e7       	ldi	r18, 0x7F	; 127
-  a4:	86 e9       	ldi	r24, 0x96	; 150
-  a6:	98 e9       	ldi	r25, 0x98	; 152
-  a8:	21 50       	subi	r18, 0x01	; 1
-  aa:	80 40       	sbci	r24, 0x00	; 0
-  ac:	90 40       	sbci	r25, 0x00	; 0
-  ae:	e1 f7       	brne	.-8      	; 0xa8 <main+0x18>
-  b0:	00 c0       	rjmp	.+0      	; 0xb2 <main+0x22>
-  b2:	00 00       	nop
-  b4:	2f ef       	ldi	r18, 0xFF	; 255
-  b6:	88 e0       	ldi	r24, 0x08	; 8
-  b8:	9d e3       	ldi	r25, 0x3D	; 61
-  ba:	21 50       	subi	r18, 0x01	; 1
-  bc:	80 40       	sbci	r24, 0x00	; 0
-  be:	90 40       	sbci	r25, 0x00	; 0
-  c0:	e1 f7       	brne	.-8      	; 0xba <main+0x2a>
-  c2:	00 c0       	rjmp	.+0      	; 0xc4 <main+0x34>
-  c4:	00 00       	nop
-	int v = 0;	
+ 124:	ff ef       	ldi	r31, 0xFF	; 255
+ 126:	28 e0       	ldi	r18, 0x08	; 8
+ 128:	8d e3       	ldi	r24, 0x3D	; 61
+ 12a:	f1 50       	subi	r31, 0x01	; 1
+ 12c:	20 40       	sbci	r18, 0x00	; 0
+ 12e:	80 40       	sbci	r24, 0x00	; 0
+ 130:	e1 f7       	brne	.-8      	; 0x12a <main+0x74>
+ 132:	00 c0       	rjmp	.+0      	; 0x134 <main+0x7e>
+ 134:	00 00       	nop
+			_delay_ms(1000); 		
+		}
+		v[0] ++;
+ 136:	19 81       	ldd	r17, Y+1	; 0x01
+ 138:	1f 5f       	subi	r17, 0xFF	; 255
+ 13a:	19 83       	std	Y+1, r17	; 0x01
+		updateBit(0, v[0]);
+ 13c:	61 2f       	mov	r22, r17
+ 13e:	80 e0       	ldi	r24, 0x00	; 0
+ 140:	0e 94 52 00 	call	0xa4	; 0xa4 <_Z9updateBithh>
+ 144:	9f ef       	ldi	r25, 0xFF	; 255
+ 146:	e8 e0       	ldi	r30, 0x08	; 8
+ 148:	fd e3       	ldi	r31, 0x3D	; 61
+ 14a:	91 50       	subi	r25, 0x01	; 1
+ 14c:	e0 40       	sbci	r30, 0x00	; 0
+ 14e:	f0 40       	sbci	r31, 0x00	; 0
+ 150:	e1 f7       	brne	.-8      	; 0x14a <main+0x94>
+ 152:	00 c0       	rjmp	.+0      	; 0x154 <main+0x9e>
+ 154:	00 00       	nop
+	//uint8_t v = '0';//'A';	
     while (1) 
     {
-		v++;
-		_delay_ms(1000);
-		usart_send(p);
-  c6:	80 e0       	ldi	r24, 0x00	; 0
-  c8:	0e 94 40 00 	call	0x80	; 0x80 <_Z10usart_sendh>
-  cc:	2f e7       	ldi	r18, 0x7F	; 127
-  ce:	8a e1       	ldi	r24, 0x1A	; 26
-  d0:	96 e0       	ldi	r25, 0x06	; 6
-  d2:	21 50       	subi	r18, 0x01	; 1
-  d4:	80 40       	sbci	r24, 0x00	; 0
-  d6:	90 40       	sbci	r25, 0x00	; 0
-  d8:	e1 f7       	brne	.-8      	; 0xd2 <main+0x42>
-  da:	00 c0       	rjmp	.+0      	; 0xdc <main+0x4c>
-  dc:	00 00       	nop
-		_delay_ms(100);
-		usart_send(v);
-  de:	81 e0       	ldi	r24, 0x01	; 1
-  e0:	0e 94 40 00 	call	0x80	; 0x80 <_Z10usart_sendh>
-	_delay_ms(2500);
-	int p = 0;
-	int v = 0;	
-    while (1) 
-    {
-		v++;
-  e4:	c1 e0       	ldi	r28, 0x01	; 1
-  e6:	d0 e0       	ldi	r29, 0x00	; 0
-int main(void)
-{
-    /* Replace with your application code */
-	_delay_ms(2500);
-	_delay_ms(2500);
-	int p = 0;
-  e8:	00 e0       	ldi	r16, 0x00	; 0
-  ea:	10 e0       	ldi	r17, 0x00	; 0
-		usart_send(p);
-		_delay_ms(100);
-		usart_send(v);
-		if(v == 9)
-		{
-			v = 0;
-  ec:	e1 2c       	mov	r14, r1
-  ee:	f1 2c       	mov	r15, r1
-	_delay_ms(2500);
-	int p = 0;
-	int v = 0;	
-    while (1) 
-    {
-		v++;
-  f0:	21 96       	adiw	r28, 0x01	; 1
-  f2:	2f ef       	ldi	r18, 0xFF	; 255
-  f4:	88 e0       	ldi	r24, 0x08	; 8
-  f6:	9d e3       	ldi	r25, 0x3D	; 61
-  f8:	21 50       	subi	r18, 0x01	; 1
-  fa:	80 40       	sbci	r24, 0x00	; 0
-  fc:	90 40       	sbci	r25, 0x00	; 0
-  fe:	e1 f7       	brne	.-8      	; 0xf8 <main+0x68>
- 100:	00 c0       	rjmp	.+0      	; 0x102 <main+0x72>
- 102:	00 00       	nop
-		_delay_ms(1000);
-		usart_send(p);
- 104:	80 2f       	mov	r24, r16
- 106:	0e 94 40 00 	call	0x80	; 0x80 <_Z10usart_sendh>
- 10a:	2f e7       	ldi	r18, 0x7F	; 127
- 10c:	8a e1       	ldi	r24, 0x1A	; 26
- 10e:	96 e0       	ldi	r25, 0x06	; 6
- 110:	21 50       	subi	r18, 0x01	; 1
- 112:	80 40       	sbci	r24, 0x00	; 0
- 114:	90 40       	sbci	r25, 0x00	; 0
- 116:	e1 f7       	brne	.-8      	; 0x110 <main+0x80>
- 118:	00 c0       	rjmp	.+0      	; 0x11a <main+0x8a>
- 11a:	00 00       	nop
-		_delay_ms(100);
-		usart_send(v);
- 11c:	8c 2f       	mov	r24, r28
- 11e:	0e 94 40 00 	call	0x80	; 0x80 <_Z10usart_sendh>
-		if(v == 9)
- 122:	c9 30       	cpi	r28, 0x09	; 9
- 124:	d1 05       	cpc	r29, r1
- 126:	21 f7       	brne	.-56     	; 0xf0 <main+0x60>
-		{
-			v = 0;
-			p = (p + 1) % 4;
- 128:	0f 5f       	subi	r16, 0xFF	; 255
- 12a:	1f 4f       	sbci	r17, 0xFF	; 255
- 12c:	03 70       	andi	r16, 0x03	; 3
- 12e:	10 78       	andi	r17, 0x80	; 128
- 130:	11 23       	and	r17, r17
- 132:	34 f4       	brge	.+12     	; 0x140 <main+0xb0>
- 134:	01 50       	subi	r16, 0x01	; 1
- 136:	11 09       	sbc	r17, r1
- 138:	0c 6f       	ori	r16, 0xFC	; 252
- 13a:	1f 6f       	ori	r17, 0xFF	; 255
- 13c:	0f 5f       	subi	r16, 0xFF	; 255
- 13e:	1f 4f       	sbci	r17, 0xFF	; 255
-		usart_send(p);
-		_delay_ms(100);
-		usart_send(v);
-		if(v == 9)
-		{
-			v = 0;
- 140:	ce 2d       	mov	r28, r14
- 142:	df 2d       	mov	r29, r15
- 144:	d5 cf       	rjmp	.-86     	; 0xf0 <main+0x60>
+		//usart_send(0xE2);
+		//_delay_ms(20);
+		if(v[0] == '9')			//9
+ 156:	19 33       	cpi	r17, 0x39	; 57
+ 158:	71 f7       	brne	.-36     	; 0x136 <main+0x80>
+ 15a:	bb cf       	rjmp	.-138    	; 0xd2 <main+0x1c>
 
-00000146 <_exit>:
- 146:	f8 94       	cli
+0000015c <_exit>:
+ 15c:	f8 94       	cli
 
-00000148 <__stop_program>:
- 148:	ff cf       	rjmp	.-2      	; 0x148 <__stop_program>
+0000015e <__stop_program>:
+ 15e:	ff cf       	rjmp	.-2      	; 0x15e <__stop_program>

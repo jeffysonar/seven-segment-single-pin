@@ -15,38 +15,61 @@
 
 //#define BAUD_NUM (F_CPU/(16 * BAUD_RATE))-1
 
-#define BAUD_NUM 0x76
+#define BAUD_NUM 0x81
 
 void usart_init();
 
 void usart_send(uint8_t ch);
 
+void updateBit(uint8_t pos, uint8_t value);
+
 int main(void)
 {
     /* Replace with your application code */
-	_delay_ms(2500);
-	_delay_ms(2500);
-	int p = 0;
-	int v = 0;	
+	//for(int i=0;i<100;i++)
+	uint8_t v[4] = {'0', '0', '0', '0'};	//0,0,0,0
+	usart_init();
+//	_delay_ms(2000);
+	//uint8_t p = 0;
+	//uint8_t v = '0';//'A';	
     while (1) 
     {
-		v++;
-		_delay_ms(1000);
-		usart_send(p);
-		_delay_ms(100);
-		usart_send(v);
-		if(v == 9)
+		//usart_send(0xE2);
+		//_delay_ms(20);
+		if(v[0] == '9')			//9
 		{
-			v = 0;
-			p = (p + 1) % 4;
+			uint8_t i = 0;
+			while(v[i] == '9')	//9
+			{
+				updateBit(i, '0');	//0
+				v[i] = '0';
+				if(i == 3)
+				{
+					i = 0;
+					break;
+				}
+				i ++;
+			}
+			v[i] ++;
+			updateBit(i, v[i]);
+			_delay_ms(1000); 		
 		}
+		v[0] ++;
+		updateBit(0, v[0]);
+		_delay_ms(1000);
     }
+}
+
+void updateBit(uint8_t pos, uint8_t value)
+{
+	usart_send(pos);
+	usart_send(value);
 }
 
 void usart_init()
 {
 	UCSR0B = (1 << TXEN0);
-	UCSR0C = (1 << 7) | (1 << UCSZ00) | (1 << UCSZ01);
+	UCSR0C = (1 << UCSZ00) | (1 << UCSZ01);
 	UBRR0L = BAUD_NUM;	
 }
 

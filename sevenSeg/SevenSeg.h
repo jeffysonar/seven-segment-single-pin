@@ -83,6 +83,10 @@ class SevenSeg
 			{
 				value -= 87;
 			}
+			else if((value > 47) && (value < 58))	//0 - 9 - (48:57) - 48
+			{
+				value -= 48;
+			}
 			else     // garbage - make it zero
 			{
 				value = 0;
