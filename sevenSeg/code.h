@@ -1,3 +1,6 @@
+// code to be passed to seven segment to display corresponding character
+// OR-ing 0x10 will light dot (right - bottom) to differentiate with some alphabets
+
 #define S_0 (0xEB|0x10)
 #define S_1 (0x22|0x10)
 #define S_2 (0xC7|0x10)

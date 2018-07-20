@@ -15,7 +15,7 @@
 
 #ifndef BAUD_NUM
 //	#define BAUD_NUM (F_CPU/(16*BAUD_RATE))-1
-	#define BAUD_NUM 0x81		// as observed value for above expression in simulator in Atmel Studio
+	#define BAUD_NUM 0x81
 #endif
 class UART
 {
@@ -29,7 +29,6 @@ class UART
 		
 		uint8_t receive()
 		{
-			//while(! (UCSRA) & (1 << RXC));					//no longer polling
 			return UDR;											//return received content
 		}
 		
